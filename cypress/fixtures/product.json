@@ -1,0 +1,11 @@
+{
+  "product":
+  {
+    "many_colors": {
+      "name": "Base for Google Home"
+    },
+    "one_color": {
+      "name": "Nest Learning Thermostat Stand"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "integrationFolder": "cypress/tests",
+  "env": {
+    "productUrl": "https://store.google.com/gb/collection/accessories_wall?compatibilityCategory=Connected%20Home"
+  }
+}
+
