@@ -1,4 +1,5 @@
 class MainPage {
+
     open(){
         cy.visit(`${Cypress.env('productUrl')}`)
     }

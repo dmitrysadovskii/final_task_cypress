@@ -7,13 +7,10 @@ it('Add product to the box', function (){
     // MainPage.openProduct('Base for Google Home');
     MainPage.openProduct('Base for Google Home');
     let productArr1 = [];
-    productPage.getProductPrice().then( list => {
-        productArr1.push('price', list);
-        cy.log(list)
+    productPage.getProductPrice().then( price => {
+        cy.wrap(price).as('productPrice')
     });
 
-
-    productArr1.push(["name", "Base for Google Home"]);
     productPage.click_button_buy();
     let productArr2 = [];
     productPage.addProductToBasket().then(obj => obj.forEach((el, keys) => {
@@ -21,16 +18,6 @@ it('Add product to the box', function (){
         }
     ));
     cy.log(productArr2);
-    cy.log(productArr1);
-    let mg = productPage.mergeArr(productArr2, productArr1);
-    // debugger
-    // mg.forEach((product, index) =>{
-    //     // debugger
-    //     cy.log(product, index)
-    // });
-
-    cy.log(mg)
-
 
 });
 
