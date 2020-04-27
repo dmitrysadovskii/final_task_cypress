@@ -23,10 +23,13 @@ class ProductPage {
         cy.wait(1000);
         return new Cypress.Promise((resolve, reject) => cy.get(".is-price:first").then(($price) => {
             cy.wrap($price).invoke('text').then( value => {
-                const price = $price.text();
-                cy.log(price);
+                const  price= $price.text();
                 const priceList = price.split(' ');
-                resolve(priceList[1]);
+                if (priceList.length === 2){
+                    cy.log(`price ${priceList[1]}`);
+                    resolve(priceList[1]);
+                }
+                resolve(price);
             })
         }));
     };
@@ -45,8 +48,8 @@ class ProductPage {
                    let productMap = new Map();
                    cy.get(".mqn-lobby-swatch__card__meta").then(($el) => {
                        let randomElement = Chance().pickone($el);
-                       productMap.set("name", randomElement.childNodes[0].textContent);
-                       productMap.set("price", randomElement.childNodes[2].textContent);
+                       productMap.set("name", randomElement.childNodes[0].textContent.trim());
+                       productMap.set("price", randomElement.childNodes[2].textContent.trim());
                        // cy.log(`Product name: ${productMap.get("name")}`);
                        cy.log(`Product price: ${productMap.get("price")}`);
                        let buttonLocator = cy.xpath(
@@ -56,10 +59,10 @@ class ProductPage {
                        resolve(productMap)
                    });
                }
+               else {
+                   cy.log('Nothing')
+               }
                })
-                else {
-                    cy.log('Nothing')
-                }
                 })
     )
     }
