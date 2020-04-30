@@ -1,11 +1,12 @@
 {
   "product":
-  {
-    "product_1": {
-      "name": "Base for Google Home"
-    },
-    "product_2": {
+  [
+    {
       "name": "Nest Learning Thermostat Stand"
+    },
+    {
+
+      "name": "Base for Google Home"
     }
-  }
+  ]
 }
