@@ -36,21 +36,14 @@ class ProductPage {
 
     addProductToBasket(){
        return new Cypress.Promise((resolve, reject) => this.upperBar.then(($header)=>{
-           // cy.wait(1000);
-           // if (checkOutPage.checkOutButton.length){
-           //     cy.log('asdasdasdasdas')
-           // }
-            // if (cy.get(".header-cart-title").should('not.be.visible')){
-           cy.wait(1000);
+           cy.wait(2000);
            cy.get("body").then(($body)=>{
-               let len = $body.find('.cart-checkout-pattern').length;
                if ($body.find('.cart-checkout-pattern').length === 0){
                    let productMap = new Map();
                    cy.get(".mqn-lobby-swatch__card__meta").then(($el) => {
                        let randomElement = Chance().pickone($el);
                        productMap.set("name", randomElement.childNodes[0].textContent.trim());
                        productMap.set("price", randomElement.childNodes[2].textContent.trim());
-                       // cy.log(`Product name: ${productMap.get("name")}`);
                        cy.log(`Product price: ${productMap.get("price")}`);
                        let buttonLocator = cy.xpath(
                            `//div[@class="mqn-lobby-swatch__card__headline ng-binding ng-scope"][contains(.,"${randomElement.childNodes[0].textContent}")]/../..//button`
@@ -67,11 +60,28 @@ class ProductPage {
     )
     }
 
-    addProductMapToBasket(){
-        let productMap = this.addProductToBasket().then(obj => {
-               return  obj
+    getRandomProduct() {
+        cy.wait(2000);
+        let randomElement = [];
+        cy.get("body").then(($body) => {
+            if ($body.find('.cart-checkout-pattern').length === 0) {
+                cy.get(".mqn-lobby-swatch__card__meta").then(($el) => {
+                    randomElement.push(Chance().pickone($el));
+                });
+
             }
-        )
+
+        });
+        return randomElement
+    }
+
+    getRandomProductName(ProductObj){
+        cy.log(ProductObj[0]);
+        // return ProductObj[0].childNodes[0].textContent.trim()
+    }
+
+    getRandomProductPrice(ProductObj){
+        // return ProductObj[0].childNodes[2].textContent.trim()
     }
 
 

@@ -1,47 +1,57 @@
 import MainPage from "../page-object/MainPage";
 import productPage from "../page-object/productPage";
 import checkOutPage from "../page-object/checkOutPage";
-import commonPage from "../page-object/commonPage"
+import commonPage from "../page-object/commonPage";
+import * as productArray from '../fixtures/product.json';
+
 
 context('ProductPage', () => {
     describe('Product Data', () => {
 
-        let i = 0;
+        const testingData = [
+            // {
+                // description: "Several choices",
+                // product: productArray.product[0]
+            // }
+            {
+                description: "Product without choice",
+                product: productArray.product[1]
+            }
+        ];
 
-        beforeEach(() => {
-            cy.fixture('product').then(productFix => {
-                    if (i === 0){
-                        let currentProduct = productFix.product[i].name;
-                        cy.log(currentProduct);
-                        i++
-                    }
-                    else if (i===1){
-                        let currentProduct = productFix.product[i].name;
-                        cy.log(currentProduct);
-                    }
-                    cy.log('Open page with products');
-                    MainPage.open();
-                    MainPage.openProduct(currentProduct);
-                    productPage.getProductPrice().then(price => {
-                        cy.wrap(price).as('productPrice')
-                    });
+        let newProduct = new Map();
+        let defaultProduct = new Map();
 
-                    productPage.click_button_buy();
-                    const projectObj = productPage.addProductToBasket();
-                    projectObj.then(maps => cy.wrap(maps.get('price')).as('newPrice'));
-                    projectObj.then(maps => cy.wrap(maps.get('name')).as('productName'))
-                // }
+        testingData.forEach(dataSet => {
+            it('Add product to the box' + dataSet.description, function () {
+                cy.log('Open page with products');
+                MainPage.open();
+                cy.log(dataSet.product);
+                MainPage.openProduct(dataSet.product.name);
+                // productPage.getProductPrice().then(price => {
+                //                 //     defaultProduct.set('price', price)
+                //                 // });
+                productPage.getProductPrice().as('price');
 
-            })
-        });
+                productPage.click_button_buy();
+                productPage.addProductToBasket().then(projectObj =>{
+                    return projectObj
 
-        it('Add product to the box', function () {
-            const finalPrice = commonPage.getFinalPrice(this.newPrice, this.productPrice);
-            checkOutPage.checkProductPrice(finalPrice);
-            checkOutPage.checkProductName(this.currentProduct, this.productName);
-            checkOutPage.checkProductQuantity(1);
-            checkOutPage.removeProduct();
-            checkOutPage.checkProductListContainItems(0);
-        });
+                }).as('productObj');
+                // projectObj.then(maps => newProduct.set('price', maps.get('price')));
+                // projectObj.then(maps => newProduct.set('name', maps.get('name')));
+                cy.log(cy.get('@productObj'));
+                // cy.log(defaultProduct.get('price'));
+                // const randProductName = productPage.getRandomProductName(randomProduct);
+                // const randProductPrice = productPage.getRandomProductPrice(randomProduct);
+                // cy.log(randProductName, randProductPrice);
+                const finalPrice = commonPage.getFinalPrice(newProduct.get('price'), defaultProduct.get('price'));
+                checkOutPage.checkProductPrice(finalPrice);
+                checkOutPage.checkProductName(dataSet.product.name, newProduct.get('name'));
+                checkOutPage.checkProductQuantity(1);
+                checkOutPage.removeProduct();
+                checkOutPage.checkProductListContainItems(0);
+            });
         });
     });
+});
